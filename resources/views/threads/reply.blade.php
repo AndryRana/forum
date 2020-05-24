@@ -34,7 +34,7 @@
                 </div>
                 
                 <button class="btn btn-sm btn-outline-primary" @click="update">Update</button>
-                <button class="btn btn-sm btn-outline-secondary" @click="editing = false">Cancel</button>
+                <button class="btn btn-sm btn-outline-secondary" @click="editing = false">Cancel </button>
 
             </div>
             <div v-else v-text="body">
