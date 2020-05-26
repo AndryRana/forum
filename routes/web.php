@@ -37,6 +37,4 @@ Route::delete('/replies/{reply}/favorites', 'FavoritesController@destroy');
 
 Route::get('/profiles/{user}', 'ProfilesController@show')->name('profile');
 
-Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
