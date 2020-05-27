@@ -92,10 +92,7 @@ class ThreadsController extends Controller
         // return Thread::withCount('replies')->find(51);
         // return $thread->replyCount;
         //  return $thread;  it gives replies_count: 1
-        return view('threads.show', [
-            'thread' => $thread,
-            'replies' => $thread->replies()->paginate(20)
-        ]);
+        return view('threads.show', compact('thread'));
     }
 
     /**
