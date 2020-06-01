@@ -65,25 +65,17 @@ class Thread extends Model
         $reply =  $this->replies()->create($reply);
 
         // Prepare notifications for all subscribers.
-        $this->subscriptions
-        ->filter(function ($sub) use ($reply) {
-            return $sub->user_id != $reply->user_id;
-        })
-        ->each->notify($reply);
-    //     ->each( function ($sub) use ($reply) {
-    //         $sub->user->notify(new ThreadWasUpdated($this, $reply));
-    // });
-
-        /** Another way to get it */
-        
-        // foreach ($this->subscriptions as $subscription) {
-        //     if ($subscription->user_id != $reply->user_id) {
-
-        //         $subscription->user->notify(new ThreadWasUpdated($this, $reply));
-        //     }
-        // }
+        $this->notifySubscribers($reply);
 
         return $reply;
+    }
+
+    public function notifySubscribers($reply)
+    {
+        $this->subscriptions
+        ->where('user_id', '!=', $reply->user_id)
+        ->each
+        ->notify($reply);
     }
 
     public function scopeFilter($query, ThreadFilters $filters)
@@ -123,5 +115,18 @@ class Thread extends Model
         return $this->subscriptions()
         ->where('user_id', auth()->id())
         ->exists();
+    }
+
+    public function hasUpdatesFor($user)
+    {
+        //  look in the cache for the proper key.
+        // compare that carbon instance with the $thread->updated_at
+        // $key = sprintf("users.%s.visits.%s", auth()->id(), $this->id);
+       
+
+        $key = $user->visitedThreadCacheKey($this);
+
+        return $this->updated_at > cache($key);
+
     }
 }

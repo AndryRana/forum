@@ -6,6 +6,7 @@ use App\Channel;
 use App\Filters\ThreadFilters as ThreadFilters;
 use App\Thread;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class ThreadsController extends Controller
@@ -92,6 +93,17 @@ class ThreadsController extends Controller
         // return Thread::withCount('replies')->find(51);
         // return $thread->replyCount;
         //  return $thread;  it gives replies_count: 1
+
+        // Record that the user visited this page
+        //  Record a Timestamp
+        // $key = sprintf("users.%s.visits.%s", auth()->id(), $thread->id);
+
+        // cache()->forever($key, Carbon::now());
+
+        if (auth()->check()) {
+            auth()->user()->read($thread);
+        }
+
         return view('threads.show', compact('thread'));
     }
 
