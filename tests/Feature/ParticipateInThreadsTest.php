@@ -18,7 +18,7 @@ class ParticipateInThreadsTest extends TestCase
         $this->withExceptionHandling();
         $this->post('/threads/some-channel/1/replies', [])->assertRedirect('/login');
     }
-
+    
     /** @test */
     function an_authenticated_user_may_participate_in_forum_threads()
     {
@@ -34,17 +34,18 @@ class ParticipateInThreadsTest extends TestCase
     }
     
     /** @test */
-    function a_reply_requires_a_body()
-    {
-        $this->signIn();
+    // function a_reply_requires_a_body()
+    // {
+    //     $this->signIn();
         
-        $thread = create('App\Thread');
-        $reply = make('App\Reply', ['body'=> null]);
+    //     $thread = create('App\Thread');
+    //     $reply = make('App\Reply', ['body'=> null]);
         
-        $this->post($thread->path() . '/replies', $reply->toArray())
-        ->assertSessionHasErrors('body');
+    //     $this->post($thread->path() . '/replies', $reply->toArray())
+    //     ->assertSessionHasErrors('body');
 
-    }
+    // }
+
 
     /** @test */
     public function unauthorized_users_cannot_delete_replies()
@@ -62,6 +63,7 @@ class ParticipateInThreadsTest extends TestCase
 
     }
 
+
     /** @test */
     public function authorized_users_can_delete_replies()
     {
@@ -74,6 +76,7 @@ class ParticipateInThreadsTest extends TestCase
         
         $this->assertEquals(0, $reply->thread->fresh()->replies_count);
     }
+
 
     /** @test */
     public function authorized_users_can_update_replies()
@@ -102,5 +105,39 @@ class ParticipateInThreadsTest extends TestCase
           ->patch("/replies/{$reply->id}")
           ->assertStatus(403);
   
+      }
+
+
+      /** @test */
+      public function replies_that_contain_spam_may_not_be_created()
+      {
+        $this->signIn();
+
+        $thread = create('App\Thread');
+ 
+        $reply = make('App\Reply', [
+            'body' => 'Yahoo Customer Support'
+        ]);
+
+        $this->json('post', $thread->path() . '/replies', $reply->toArray())
+        ->assertStatus(422);
+    }
+    
+    /** @test */
+    public function users_may_only_reply_a_maximum_of_once_per_minute()
+    {
+        $this->signIn();
+        
+        $thread = create('App\Thread');
+        
+        $reply = make('App\Reply', [
+            'body' => 'My simple reply'
+            ]);
+
+        $this->post($thread->path() . '/replies', $reply->toArray())
+        ->assertStatus(201);
+        
+        $this->post($thread->path() . '/replies', $reply->toArray())
+        ->assertStatus(429);
       }
 }

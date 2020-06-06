@@ -1,15 +1,18 @@
 <template>
-    <div class="alert alert-success alert-flash" role="alert" v-show="show"> 
-      <strong>Success!</strong> {{ body }}
+    <div class="alert alert-flash" 
+        :class="`alert-${level}`"
+        role="alert" 
+        v-show="show" 
+        v-text="body"> 
     </div>
 </template>
  
 <script>
         
-    window.events = new Vue;
+    window.events = new Vue();
         
-    window.flash = function (message) {
-        window.events.$emit('flash', message);
+    window.flash = function (message, level = 'success') {
+        window.events.$emit('flash', {message, level});
     };
     
     export default {
@@ -17,6 +20,7 @@
         data() {
             return {
                 body: '',
+                level: 'success',
                 show: false
             }
         },
@@ -25,12 +29,13 @@
                 this.flash(this.message);
             }
 
-            window.events.$on('flash', message => this.flash(message));
+            window.events.$on('flash', data => this.flash(data));
         },
 
         methods: {
-            flash(message) {
-                this.body = message;
+            flash(data) {
+                this.body = data.message;
+                this.level = data.level;
                 this.show = true;
 
                 this.hide();

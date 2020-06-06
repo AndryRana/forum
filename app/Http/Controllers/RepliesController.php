@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreatePostRequest;
 use App\Reply;
 use App\Thread;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class RepliesController extends Controller
 {
@@ -13,36 +14,54 @@ class RepliesController extends Controller
         $this->middleware('auth', ['except' => 'index']);
     }
 
+
+
     public function index($channelId, Thread $thread)
     {
         return $thread->replies()->paginate(5);
     }
 
-    public function store($channelId, Thread $thread)
+
+
+
+    public function store($channelId, Thread $thread, CreatePostRequest $form)
     {
-        request()->validate([
-            'body' => 'required'
-        ]);
         
-        $reply = $thread->addReply([
-            'body' => request('body'),
-            'user_id' => auth()->id()
-        ]);
+        // if (Gate::denies('create', new Reply)) {
+        //     return response(
+        //         'You are posting too frequently.Please take a break. :)', 429);
 
-        if(request()->expectsJson()) {
-            return $reply->load('owner');
-        }
+        // }
+            // $this->authorize('create', new Reply);
+            // $this->validate(request(), ['body' => 'required|spamfree']);
 
+           return $thread->addReply([
+                'body' => request('body'),
+                'user_id' => auth()->id()
+            ])->load('owner');
 
-        return back()->with('flash', 'Your reply has been left');
     }
+
+
+
 
     public function update(Reply $reply)
     {
         $this->authorize('update', $reply);
 
-        $reply->update(request(['body']));
+        try {
+
+            request()->validate(['body' => 'required|spamfree']);
+            // $this->validate(request(), ['body' => 'required|spamfree']);
+    
+            $reply->update(request(['body']));
+        } catch (\Exception $e) {
+            return response('Sorry, your reply could not be saved at this time.', 422);
+         }
     }
+
+
+
 
     public function destroy(Reply $reply)
     {
@@ -56,4 +75,5 @@ class RepliesController extends Controller
 
         return back();
     }
+
 }
