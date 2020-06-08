@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Events\ThreadReceivedNewReply;
 use App\Filters\ThreadFilters;
 use App\Notifications\ThreadWasUpdated;
 use Illuminate\Database\Eloquent\Model;
@@ -64,12 +65,18 @@ class Thread extends Model
     {
         $reply =  $this->replies()->create($reply);
 
+        event(new ThreadReceivedNewReply($reply));
         // Prepare notifications for all subscribers.
         $this->notifySubscribers($reply);
 
         return $reply;
     }
 
+    /**
+     * @param mixed $reply
+     * 
+     * @return [type]
+     */
     public function notifySubscribers($reply)
     {
         $this->subscriptions
