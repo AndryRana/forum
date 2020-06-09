@@ -17,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'avatar_path'
     ];
 
     /**
@@ -58,9 +58,25 @@ class User extends Authenticatable
         return $this->hasMany(Activity::class);
     }
 
+    /**
+     * @param mixed $thread
+     * 
+     * @return [type]
+     */
     public function read($thread)
     {
         cache()->forever($this->visitedThreadCacheKey($thread), Carbon::now());
+    }
+
+
+    public function avatar()
+    {
+        return asset($this->avatar_path ?: 'avatars/default.jpg');
+
+        // if (! $this->avatar_path) {
+        //     return 'avatars/default.jpg';
+        // }
+        // return $this->avatar_path;
     }
 
     public function visitedThreadCacheKey($thread)

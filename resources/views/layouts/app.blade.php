@@ -24,6 +24,7 @@
         [v-cloak] { display: none; }
     </style>
 
+    <!-- Scripts-->
     <script>
         window.App = {!! json_encode([
             'csrfToken' => csrf_token(),
@@ -31,6 +32,8 @@
             'user' => Auth::user()
         ]) !!};
     </script>
+
+    @yield('header')
 </head>
 <body style="padding-bottom: 100px">
     <div id="app">
@@ -44,5 +47,6 @@
     
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
+    @yield('scripts')
 </body>
 </html>

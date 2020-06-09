@@ -1,5 +1,11 @@
 @extends('layouts.app')
 
+@section('header')
+
+    <link href="/css/vendor/jquery.atwho.css" rel="stylesheet">
+    
+@endsection
+
 @section('content')
     <thread-view initial-replies-count="{{ $thread->replies_count }}" inline-template>
         <div class="container">
@@ -9,20 +15,23 @@
                         <div class="card-header">
 
                             <div class="level">
+                                    
+                                <img src="{{ $thread->creator->avatar() }}" alt="{{ $thread->creator->name }}" width="25" height="25" class="mr-1">
+
                                 <span class="flex">
                                     <a href="{{ route('profile', $thread->creator) }}"> {{ $thread->creator->name }} </a> posted:
                                     {{ $thread->title }}
                                 </span>
                                 
-                            @can('update', $thread)
-                                <form action="{{ $thread->path() }}" method="POST">
-                                    @csrf
-                                    @method('DELETE')
+                                @can('update', $thread)
+                                    <form action="{{ $thread->path() }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
 
-                                <button type="submit" class="btn btn-link">Delete Thread</button> 
+                                    <button type="submit" class="btn btn-link">Delete Thread</button> 
 
-                                </form>
-                            @endcan    
+                                    </form>
+                                @endcan    
 
                             </div>
                         </div>
