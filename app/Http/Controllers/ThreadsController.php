@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Channel;
 use App\Filters\ThreadFilters as ThreadFilters;
 use App\Thread;
+use App\Trending;
 use Illuminate\Http\Request;
 
 class ThreadsController extends Controller
@@ -20,7 +21,7 @@ class ThreadsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Channel $channel,ThreadFilters $filters)
+    public function index(Channel $channel,ThreadFilters $filters, Trending $trending)
     {
         // if ($channel->exists) {
         //     $threads = $channel->threads()->latest();
@@ -39,10 +40,14 @@ class ThreadsController extends Controller
          if (request()->wantsJson()) {
              return $threads;
          }
+
       
         // $threads = $this->getThreads($channel);
 
-        return view('threads.index',compact('threads'));
+        return view('threads.index',[
+            'threads' => $threads,
+            'trending' => $trending->get()
+        ]);
     }
 
     /**
@@ -63,6 +68,8 @@ class ThreadsController extends Controller
      */
     public function store(Request $request)
     {
+        
+
         $this->validate($request, [
             'title' => 'required|spamfree',
             'body' => 'required|spamfree',
@@ -85,7 +92,7 @@ class ThreadsController extends Controller
      * @param  \App\Thread  $thread
      * @return \Illuminate\Http\Response
      */
-    public function show($channelId, Thread $thread)
+    public function show($channelId, Thread $thread, Trending $trending)
     {
         // return $thread->load('replies');
         // return Thread::withCount('replies')->find(51);
@@ -102,6 +109,11 @@ class ThreadsController extends Controller
             auth()->user()->read($thread);
         }
 
+        $trending->push($thread);
+
+        $thread->recordVisit();
+        
+        
         return view('threads.show', compact('thread'));
     }
 

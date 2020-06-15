@@ -13,7 +13,7 @@ class CreateThreadsTest extends TestCase
 {
     use DatabaseMigrations;
    /** @test */
-   function guest_may_not_create_a_thread ()
+   function guests_may_not_create_a_threads()
    {
        // We should expect an authenticated error exception
        $this->expectException('Illuminate\Auth\AuthenticationException');
@@ -32,6 +32,16 @@ class CreateThreadsTest extends TestCase
 
 
    }
+
+
+   /** @test */
+   public function authenticated_users_must_first_confirm_their_email_address_before_creating_threads()
+   {
+       $this->publishThread()
+       ->assertRedirect('/threads')
+       ->assertSessionHas('flash', 'You must confirm your email address.');
+   }
+
 
    /** @test */
    function guests_cannot_see_the_create_thread_page()

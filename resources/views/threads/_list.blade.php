@@ -39,8 +39,9 @@
         </div>
         @endif --}}
             <div class="body"> {{ $thread->body }} </div>
-
-        <hr>
+    </div>
+    <div class=" card-footer">
+        {{ $thread->visits() }} Visits
     </div>
 </div>
 @empty

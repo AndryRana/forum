@@ -8,7 +8,7 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 window.Vue.prototype.authorize = function (handler) {
-
+    // Additionnal admin privileges here.
     let user = window.App.user;
 
     return user ? handler(user) : false;
@@ -29,6 +29,7 @@ window.Vue.prototype.authorize = function (handler) {
 Vue.component('flash', require('./components/Flash.vue').default);
 Vue.component('paginator', require('./components/Paginator.vue').default);
 Vue.component('user-notifications', require('./components/UserNotifications.vue').default);
+Vue.component('avatar-form' , require('./components/AvatarForm.vue').default);
 
 Vue.component('thread-view', require('./pages/Thread.vue').default);
 /**

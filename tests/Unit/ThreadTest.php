@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use App\Notifications\ThreadWasUpdated;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Redis;
 use Tests\TestCase;
 
 // use PHPUnit\Framework\TestCase;
@@ -142,5 +143,23 @@ class ThreadTest extends TestCase
            $this->assertFalse($thread->hasUpdatesFor(auth()->user()));
        });
 
+    }
+
+    /** @test */
+    public function a_thread_records_each_visit()
+    {
+        $thread = make('App\Thread', ['id' => 1]);
+
+        $thread->resetVisits();
+
+        $thread->recordVisit(); // incr 100 to 101
+        
+        $this->assertEquals(1, $thread->visits());
+        
+        $thread->recordVisit(); // incr 100 to 101
+        
+        $thread->visits(); // 100
+
+        $this->assertEquals(2, $thread->visits());
     }
 }
