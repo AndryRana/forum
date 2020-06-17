@@ -9,11 +9,11 @@
                      <a href=" {{ $thread->path() }} ">
 
                      @if (auth()->check() && $thread->hasUpdatesFor(auth()->user()))
-                        <strong>
+                        <strong class=" bold">
                             {{ $thread->title }}
                         </strong>
                      @else
-                            {{ $thread->title }}    
+                           <i>{{ $thread->title }}</i>
                      @endif
                         
                     </a>
