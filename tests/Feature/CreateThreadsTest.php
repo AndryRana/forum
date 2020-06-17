@@ -22,7 +22,7 @@ class CreateThreadsTest extends TestCase
        $this->get('/threads/create')
        ->assertRedirect('/login');
 
-       $this->post('/threads')
+       $this->post(route('threads'))
        ->assertRedirect('/login');
        // Given we have a thread
     //    $thread =make('App\Thread');
@@ -35,9 +35,16 @@ class CreateThreadsTest extends TestCase
 
 
    /** @test */
-   public function authenticated_users_must_first_confirm_their_email_address_before_creating_threads()
+   public function new_users_must_first_confirm_their_email_address_before_creating_threads()
    {
-       $this->publishThread()
+    $user = factory('App\User')->states('unconfirmed')->create();
+
+    $this->signIn($user);
+
+    $thread = make('App\Thread');
+
+
+    $this->post(route('threads'), $thread->toArray())
        ->assertRedirect('/threads')
        ->assertSessionHas('flash', 'You must confirm your email address.');
    }
@@ -52,7 +59,7 @@ class CreateThreadsTest extends TestCase
    
    
     /** @test */
-    function an_authenticated_user_can_create_new_forum_threads()
+    function a_user_can_create_new_forum_threads()
     {
          //$this->withoutExceptionHandling();
 
@@ -69,7 +76,7 @@ class CreateThreadsTest extends TestCase
         // ]);
         
         // And once we hit the endpoint to create a new thread
-        $response = $this->post('/threads', $thread->toArray());
+        $response = $this->post(route('threads'), $thread->toArray());
 
         // And when we visit the thread page
         // Then we should see the new thread's title and body
@@ -141,6 +148,6 @@ function unauthorized_users_may_not_delete_threads()
         $thread = make('App\Thread', $overrides);
 
 
-        return $this->post('/threads', $thread->toArray());
+        return $this->post(route('threads'), $thread->toArray());
     }
 }
