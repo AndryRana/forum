@@ -8,6 +8,7 @@ use App\Thread;
 use App\Trending;
 use Illuminate\Http\Request;
 
+
 class ThreadsController extends Controller
 {
     
@@ -80,8 +81,13 @@ class ThreadsController extends Controller
             'user_id' => auth()->id(),
             'channel_id' => request('channel_id'),
             'title' => request('title'),
-            'body' => request('body')
+            'body' => request('body'),
         ]);
+
+        if (request()->wantsJson()) {
+            return response($thread, 201);
+        }
+
         return  redirect($thread->path())
         ->with('flash', 'Your thread has been published');
     }

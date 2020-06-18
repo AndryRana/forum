@@ -7,6 +7,7 @@ use App\Filters\ThreadFilters;
 use App\Notifications\ThreadWasUpdated;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Str;
 
 class Thread extends Model
 {
@@ -30,15 +31,15 @@ class Thread extends Model
         });
 
 
-        // static::created(function($thread){
-        //    $thread->recordActivity('created');
-        // });
+        static::created(function($thread){
+           $thread->update(['slug'=> $thread->title]);
+        });
     }
 
 
     public function path()
     {
-        return "/threads/{$this->channel->slug}/{$this->id}";
+        return "/threads/{$this->channel->slug}/{$this->slug}";
     }
 
     public function replies()
@@ -138,5 +139,20 @@ class Thread extends Model
 
     }
 
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
+
+    public function setSlugAttribute($value)
+    {
+        $slug = Str::slug($value);
+
+        if (static::whereSlug($slug)->exists()) {
+            $slug = "{$slug}-" . $this->id;
+        }
+
+        $this->attributes['slug'] = $slug;
+    }
 
 }

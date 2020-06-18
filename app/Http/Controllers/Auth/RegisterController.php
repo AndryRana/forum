@@ -68,11 +68,12 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        
         return User::forceCreate([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'confirmation_token' => Str::random(25)
+            'confirmation_token' => Str::limit(md5($data['email'] . Str::random()), 25, '')
         ]);
     }
 

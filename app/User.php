@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use phpDocumentor\Reflection\Types\This;
 
 class User extends Authenticatable
 {
@@ -63,6 +64,7 @@ class User extends Authenticatable
     public function confirm()
     {
         $this->confirmed = true;
+        $this->confirmation_token = null;
 
         $this->save();
     }
