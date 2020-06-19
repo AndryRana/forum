@@ -1,6 +1,6 @@
 <template>
         <div :id="'reply-'+id" class="card mb-3">
-            <div class="card-header">
+            <div class="card-header" :class="isBest ? 'bg-success': 'bg-light'">
                 <div class="level">
                     <h5 class="flex">
                         <a :href="'/profiles/'+data.owner.name"
@@ -34,8 +34,12 @@
             </div>
 
             <div class="card-footer level" v-if="canUpdate">
-                <button class="btn btn-outline-secondary btn-sm mr-1" @click="editing = true">Edit</button>
-                <button class="btn btn-outline-danger  btn-sm" @click="destroy">Delete</button>
+                <div v-if="canUpdate">
+                    <button class="btn btn-outline-secondary btn-sm mr-1" @click="editing = true">Edit</button>
+                    <button class="btn btn-outline-danger  btn-sm mr-1" @click="destroy">Delete</button>
+                </div>
+
+                <button class="btn btn-outline-primary  btn-sm ml-auto" @click="markBestReply" v-show="! isBest">Best Reply?</button>
             </div>
         </div>
     <!-- </reply> -->
@@ -56,11 +60,17 @@
             return {
                 editing: false,
                 id: this.data.id,
-                body: this.data.body
+                body: this.data.body,
+                // isBest: this.data.isBest,
+                thread: window.thread
             };
         },
 
         computed: {
+            isBest() {
+                return this.thread.best_reply_id == this.id;
+            },
+
             ago() {
                 return moment(this.data.created_at).fromNow() + '...';
             },
@@ -72,9 +82,14 @@
             canUpdate() {
                return this.authorize(user => this.data.user_id == user.id);
                 // return this.data.user_id == window.App.user.id;
-            }
-        },
+            },
 
+            // created () {
+            //     window.events.$on('best-reply-selected', id => {
+            //     this.isBest = (id === this.id);
+            // });
+            // }
+        },
         methods: {
             update() {
                 axios.patch('/replies/' + this.data.id, {
@@ -94,6 +109,14 @@
                 
                 this.$emit('deleted', this.data.id);
              
+            },
+
+            markBestReply() {
+                // axios.post('/replies/' + this.data.id + '/best');
+
+                // window.events.$emit('best-reply-selected', this.id);
+                axios.post('/replies/' + this.id + '/best');
+                this.thread.best_reply_id = this.id;
             }
         }
     }

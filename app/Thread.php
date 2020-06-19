@@ -31,7 +31,7 @@ class Thread extends Model
         });
 
 
-        static::created(function($thread){
+        static::created(function ($thread) {
            $thread->update(['slug'=> $thread->title]);
         });
     }
@@ -149,10 +149,18 @@ class Thread extends Model
         $slug = Str::slug($value);
 
         if (static::whereSlug($slug)->exists()) {
-            $slug = "{$slug}-" . $this->id;
+            $slug = "{$slug}-{$this->id}";
         }
 
         $this->attributes['slug'] = $slug;
+    }
+
+    public function markBestReply(Reply $reply)
+    {
+        $reply->thread->update(['best_reply_id' => $reply->id]);
+        // $this->best_reply_id = $reply->id;
+
+        // $this->save();
     }
 
 }
