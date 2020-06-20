@@ -4,15 +4,28 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
+const { param } = require('jquery');
+
 require('./bootstrap');
 
 window.Vue = require('vue');
-window.Vue.prototype.authorize = function (handler) {
-    // Additionnal admin privileges here.
-    let user = window.App.user;
 
-    return user ? handler(user) : false;
+let authorizations = require('./authorizations');
+
+window.Vue.prototype.authorize = function (...params) {
+    // Additionnal admin privileges here.
+    if (! window.App.signedIn) return false;
+
+    if (typeof params[0] === 'string') {
+        //  updateReply (reply)
+       return authorizations[params[0]](params[1]);
+    }
+
+
+    return params[0](window.App.user);
 };
+
+window.Vue.prototype.signedIn = window.App.signedIn;
 
 
 /**
