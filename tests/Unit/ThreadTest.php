@@ -88,7 +88,7 @@ class ThreadTest extends TestCase
 
 
         // Then we should be able to fetch all threads that the user has subscribed to
-        $this->assertEquals(1, $thread->subscriptions()->where('user_id', auth()->id())->count()) ;
+        $this->assertEquals(1, $thread->subscriptions()->where('user_id', $userId)->count()) ;
 
     }
     
@@ -162,4 +162,6 @@ class ThreadTest extends TestCase
 
         $this->assertEquals(2, $thread->visits());
     }
+
+
 }

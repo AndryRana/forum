@@ -17,7 +17,7 @@ window.Vue.prototype.authorize = function (...params) {
     if (! window.App.signedIn) return false;
 
     if (typeof params[0] === 'string') {
-        //  updateReply (reply)
+        //  return updateReply (reply)
        return authorizations[params[0]](params[1]);
     }
 

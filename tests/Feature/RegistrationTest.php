@@ -19,15 +19,14 @@ class RegistrationTest extends TestCase
     public function a_confirmation_email_is_sent_upon_registration()
     {
         Mail::fake();
-        
         $this->post(route('register'), [
             'name' => 'John',
             'email' => 'john@example.com',
             'password' => 'foobar',
             'password_confirmation' => 'foobar'
-        ]);
-
-        Mail::assertSent(PleaseConfirmYourEmail::class);
+            ]);
+            
+        Mail::assertQueued(PleaseConfirmYourEmail::class);
 
     }
 

@@ -40,6 +40,14 @@ $factory->state(App\User::class, 'unconfirmed', function () {
     ];
 });
 
+
+$factory->state(App\User::class, 'administrator', function () {
+    return [
+        'name' => 'JohnDoe'
+    ];
+});
+
+
 $factory->define(Thread::class, function (Faker $faker) {
     $title = $faker->sentence;
     return [
@@ -47,7 +55,8 @@ $factory->define(Thread::class, function (Faker $faker) {
         'channel_id' => factory(App\Channel::class),
         'title' => $title,
         'body' => $faker->paragraph,
-        'slug' => Str::slug($title)
+        'slug' => Str::slug($title),
+        'locked' => false
 
 
     ];

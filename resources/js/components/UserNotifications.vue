@@ -13,7 +13,8 @@
         :href="notification.data.link" 
         v-for="notification in notifications" 
         v-text="notification.data.message"
-        @click="markAsRead(notification)">
+        @click="markAsRead(notification)"
+        >
         
       </a>
    

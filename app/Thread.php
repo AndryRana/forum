@@ -17,6 +17,10 @@ class Thread extends Model
 
     protected $appends = ['isSubscribedTo'];
 
+    protected $casts = [
+       'locked' => 'boolean'
+    ];
+
     // we want to eagerload this relationship for every single query
     // we can put it in globalScope
     protected $with = ['creator', 'channel'];
@@ -73,6 +77,8 @@ class Thread extends Model
 
         return $reply;
     }
+
+
 
     /**
      * @param mixed $reply

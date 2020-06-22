@@ -69,6 +69,12 @@ class User extends Authenticatable
         $this->save();
     }
 
+
+    public function isAdmin()
+    {
+        return in_array($this->name, ['JohnDoe', 'JaneDoe']);
+    }    
+
     /**
      * @param mixed $thread
      * 
@@ -90,9 +96,15 @@ class User extends Authenticatable
         // return $this->avatar_path;
     }
 
+    /**
+     * @param mixed $thread
+     * 
+     * @return [type]
+     */
     public function visitedThreadCacheKey($thread)
     {
         return sprintf("users.%s.visits.%s", $this->id, $thread->id);
     }
+
 
 }

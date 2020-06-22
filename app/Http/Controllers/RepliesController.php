@@ -50,6 +50,9 @@ class RepliesController extends Controller
             // $this->authorize('create', new Reply);
             // $this->validate(request(), ['body' => 'required|spamfree']);
 
+            if ($thread->locked) {
+                return response('Thread is locked' , 422);
+            }
             return  $thread->addReply([
                 'body' => request('body'),
                 'user_id' => auth()->id()
