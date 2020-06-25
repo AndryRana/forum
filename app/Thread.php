@@ -8,10 +8,11 @@ use App\Notifications\ThreadWasUpdated;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Str;
+use Laravel\Scout\Searchable;
 
 class Thread extends Model
 {
-    use RecordsActivity, RecordsVisits;
+    use RecordsActivity, RecordsVisits, Searchable;
 
     protected $guarded = [];
 
@@ -168,5 +169,12 @@ class Thread extends Model
 
         // $this->save();
     }
+
+    public function toSearchableArray()
+    {
+        return $this->toArray() + ['path' => $this->path()];
+    }
+        
+    
 
 }
