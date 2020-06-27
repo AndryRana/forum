@@ -38,7 +38,7 @@ Route::delete('locked-threads/{thread}', 'LockedThreadsController@destroy')->nam
 
 
 Route::get('/threads/{channel}/{thread}/replies', 'RepliesController@index');
-Route::middleware('throttle:1')->post('/threads/{channel}/{thread}/replies', 'RepliesController@store');
+Route::post('/threads/{channel}/{thread}/replies', 'RepliesController@store');
 Route::patch('/replies/{reply}', 'RepliesController@update');
 Route::delete('/replies/{reply}', 'RepliesController@destroy')->name('replies.destroy');
 

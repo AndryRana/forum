@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Str;
 use Laravel\Scout\Searchable;
+use Stevebauman\Purify\Purify;
 
 class Thread extends Model
 {
@@ -170,11 +171,16 @@ class Thread extends Model
         // $this->save();
     }
 
-    public function toSearchableArray()
+    public function toSearchableArray()     
     {
         return $this->toArray() + ['path' => $this->path()];
     }
-        
-    
+
+
+    public function getBodyAttribute($body)
+    {
+        $p = new Purify(); 
+        return $p->clean($body);
+    }
 
 }
