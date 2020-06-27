@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Str;
 use Laravel\Scout\Searchable;
-use Stevebauman\Purify\Purify;
+use Stevebauman\Purify\Facades\Purify;
 
 class Thread extends Model
 {
@@ -179,8 +179,7 @@ class Thread extends Model
 
     public function getBodyAttribute($body)
     {
-        $p = new Purify(); 
-        return $p->clean($body);
+        return \Purify::clean($body);
     }
 
 }
