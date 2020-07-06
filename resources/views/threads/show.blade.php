@@ -30,7 +30,7 @@
                     
                         <div class="card-body">
                             <p>
-                                This thread was published {{ $thread->created_at->diffForHumans() }} by
+                                This thread was published the {{ $thread->created_at->format('d/m/Y H:m' ) }} by
                                 <a href="#">{{ $thread->creator->name }}</a>, and currently
                                 has <span v-text="repliesCount"></span> {{ Str::plural('comment', $thread->replies_count) }} .
                             </p>

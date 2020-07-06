@@ -1,7 +1,7 @@
 <template>
   <li class="nav-item dropdown" v-if="notifications.length">
     <a class="nav-link " href="#" role="button" data-toggle="dropdown">
-        
+      
     <span class="fa fa-bell"></span>
         
     </a>

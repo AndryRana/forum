@@ -58,7 +58,7 @@
                     @endif
                 @else
 
-                 <user-notifications></user-notifications>  
+                 <user-notifications></user-notifications>  <span class="caret">{{ auth()->user()->unreadNotifications->count() }} </span>
 
                     <li class="nav-item dropdown">
                         <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
