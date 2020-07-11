@@ -15,9 +15,9 @@
                     Search
                 </div>
                 <div class="card-body">
-                   <form method="GET" action="/threads/search/">
+                   <form method="GET" action="{{ route('threads.search') }}">
                         <div class="form-group">
-                            <input type="text" placeholder="Search for something ..." name="q" class=" form-control" >
+                            <input type="text" placeholder="Search for something ..." name="q" class=" form-control" value="{{ request()->q ?? '' }}">
                         </div>
 
                         <div class="form-group">

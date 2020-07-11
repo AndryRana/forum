@@ -20,7 +20,7 @@
                 </h4>
 
                 <h5>
-                    Posted by: <a href="{{ route('profile', $thread->creator) }}">{{ $thread->creator->name }}</a> at <small>{{ $thread->created_at->format('d/m/Y H:m' ) }}</small>
+                    Publiée par: <a href="{{ route('profile', $thread->creator) }}">{{ $thread->creator->name }}</a> le <small>{{ $thread->created_at->format('d/m/Y H:m' ) }}</small>
                 </h5>
             </div>
 
